@@ -5,8 +5,10 @@ library(openxlsx)
 nombre_archivos=list.files(path="D:/pablo/Desktop/Lo mas actualizado/Doctorado/Manuscrito 7 (Himalaya)/ArchivosExcel")
 
 nombre_archivos=nombre_archivos[!nombre_archivos %in% "Calculado_Incremento_BAI"]
+nombre_archivos=nombre_archivos[!nombre_archivos %in% c("indi025.xlsx","nepa025.xlsx","paki041.xlsx")]
 
-
+localizaciones_original=read.xlsx("D:/pablo/Desktop/Lo mas actualizado/Doctorado/Manuscrito 7 (Himalaya)/site_details.xlsx")
+localizaciones_original=na.omit(localizaciones_original)
 
 for(i in c(1:length(nombre_archivos))){
   nombre_archivos[i]=substr(nombre_archivos[i], 1, 7)
@@ -17,6 +19,7 @@ contador_filas=1
 
 for(n in nombre_archivos){
 
+  print(n)
   x=read.xlsx(paste("D:/pablo/Desktop/Lo mas actualizado/Doctorado/Manuscrito 7 (Himalaya)/ArchivosExcel/Calculado_Incremento_BAI/",n,".xlsx",sep=""), colNames=TRUE,rowNames=TRUE)
   nombre=colnames(x)
   
@@ -29,9 +32,9 @@ for(n in nombre_archivos){
   anio=rep(rownames(x),times=col)
   
   matriz[,2]=anio
-  
-  localizaciones=read.xlsx("D:/pablo/Desktop/Lo mas actualizado/Doctorado/Manuscrito 7 (Himalaya)/site_details.xlsx")
-  localizaciones=localizaciones[contador_filas,c(3:6)]
+
+  print(localizaciones_original[contador_filas,2])
+  localizaciones=localizaciones_original[contador_filas,c(3:6)]
   
   matriz[,3]=rep(localizaciones[[1]])
   matriz[,4]=rep(localizaciones[[2]])
@@ -66,7 +69,7 @@ for(n in nombre_archivos){
       matriz[i,9]=((pi*(matriz[[i,11]]^2))-(pi*(matriz[[i-1,11]])^2))/100
     }
   }
-  
+
   colnames(matriz)=c("n","year","sp","el","lat","lon","tree","age","bai","baip","dbh")
   
   write.xlsx(matriz,paste("D:/pablo/Desktop/Lo mas actualizado/Doctorado/Manuscrito 7 (Himalaya)/ArchivosExcel/Calculado_Incremento_BAI/Archivos_MLM_JuanCarlos/",n,".xlsx",sep=""),row.names = TRUE,col.names = TRUE,showNA = FALSE)
